@@ -31,7 +31,11 @@ class BlogController extends Controller
             'title'         => 'required|max:255',
             'short_desc'    => 'required|max:500',
             'full_desc'     => 'required|min:50',
-            'image'         => 'nullable|image',
+            'author'        => 'nullable|max:100',
+            'read_minutes'  => 'nullable|integer|min:1|max:60',
+            'published_at'  => 'nullable|date',
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'isFeature'     => 'required|in:0,1',
         ]);
 
         $imagePath = null;
@@ -41,18 +45,23 @@ class BlogController extends Controller
         }
 
         Blog::create([
-            'category_id'   => $request->category_id,
-            'image'         => $imagePath,
-            'title'         => $request->title,
-            'short_desc'    => $request->short_desc,
-            'author'        => $request->author ?? 'Admin',
-            'read_time'     => $request->read_time,
-            'published_date' => $request->published_date,
-            'full_desc'     => $request->full_desc,
+            'category_id'  => $request->category_id,
+            'image'        => $imagePath,
+            'title'        => $request->title,
+            'short_desc'   => $request->short_desc,
+            'author'       => $request->author ?? 'Admin',
+            'read_minutes' => $request->read_minutes,
+            'published_at' => $request->published_at ?? now(),
+            'full_desc'    => $request->full_desc,
+            'isFeature'    => $request->isFeature,
         ]);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog Created Successfully!');
+        return redirect()
+            ->route('blogs.index')
+            ->with('success', 'Blog Created Successfully!');
     }
+
+
 
     // Edit
     public function edit($id)
@@ -73,34 +82,42 @@ class BlogController extends Controller
             'title'         => 'required|max:255',
             'short_desc'    => 'required|max:500',
             'full_desc'     => 'required|min:50',
-            'image'         => 'nullable|image',
+            'author'        => 'nullable|max:100',
+            'read_minutes'  => 'nullable|integer|min:1|max:60',
+            'published_at'  => 'nullable|date',
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'isFeature'     => 'required|in:0,1',
         ]);
 
         $imagePath = $blog->image;
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
+            // delete old image
             if ($blog->image && Storage::disk('public')->exists($blog->image)) {
                 Storage::disk('public')->delete($blog->image);
             }
 
-            // Store new image
+            // store new image
             $imagePath = $request->file('image')->store('blogs', 'public');
         }
 
         $blog->update([
-            'category_id'    => $request->category_id,
-            'image'          => $imagePath,
-            'title'          => $request->title,
-            'short_desc'     => $request->short_desc,
-            'author'         => $request->author,
-            'read_time'      => $request->read_time,
-            'published_date' => $request->published_date,
-            'full_desc'      => $request->full_desc,
+            'category_id'  => $request->category_id,
+            'image'        => $imagePath,
+            'title'        => $request->title,
+            'short_desc'   => $request->short_desc,
+            'author'       => $request->author ?? 'Admin',
+            'read_minutes' => $request->read_minutes,
+            'published_at' => $request->published_at ?? $blog->published_at,
+            'full_desc'    => $request->full_desc,
+            'isFeature'    => $request->isFeature,
         ]);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog Updated Successfully!');
+        return redirect()
+            ->route('blogs.index')
+            ->with('success', 'Blog Updated Successfully!');
     }
+
 
 
     // Delete

@@ -30,6 +30,7 @@
             <a href="{{ route('admin.dashboard') }}" class="block py-2.5 px-6 hover:bg-gray-700">Dashboard</a>
             <a href="{{ route('categories.index') }}" class="block py-2.5 px-6 hover:bg-gray-700">Manage Categories</a>
             <a href="{{ route('blogs.index') }}" class="block py-2.5 px-6 hover:bg-gray-700">Manage Blogs</a>
+            <a href="{{ route('newsletter.list') }}" class="block py-2.5 px-6 hover:bg-gray-700">NewsLetter</a>
 
             <form action="{{ route('logout') }}" method="POST" class="mt-4">
                 @csrf

@@ -5,22 +5,26 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsLetterController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/',[HomeController::class, 'index'])->name('home');
-Route::get('/category',[HomeController::class, 'category'])->name('category');
-Route::get('/blog',[HomeController::class, 'blogPost'])->name('blog.post');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/category/{id}', [HomeController::class, 'category'])->name('category');
+Route::get('/blog/{id}', [HomeController::class, 'blogPost'])->name('blog.show');
+Route::post('/newsletter/create', [NewsLetterController::class, 'newsLetterStore'])->name('newsletter.store');
 
-Route::get('/login', [AuthController::class,'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class,'login']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 // Route::get('/register', [AuthController::class,'showRegisterForm'])->name('register');
 // Route::post('/register', [AuthController::class,'register']);
-Route::post('/logout', [AuthController::class,'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-Route::prefix('admin')->middleware('admin')->group(function() {
+Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
 
     Route::resource('categories', CategoryController::class);
     Route::resource('blogs', BlogController::class);
+    Route::get('/newsletter', [NewsLetterController::class, 'list'])->name('newsletter.list');
+    Route::delete('/newsletter/delete{id}', [NewsLetterController::class, 'destroy'])->name('newsLetter.destroy');
 });

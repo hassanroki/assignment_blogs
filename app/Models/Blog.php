@@ -15,17 +15,24 @@ class Blog extends Model
         'title',
         'short_desc',
         'author',
-        'read_time',
-        'published_date',
+        'read_minutes',
+        'published_at',
         'full_desc',
+        'isFeature',
     ];
+
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
 }

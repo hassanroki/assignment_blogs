@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('short_desc', 500);
             $table->string('author')->nullable();
-            $table->string('read_time')->nullable();
-            $table->date('published_date')->nullable();
+            $table->unsignedTinyInteger('read_minutes')->nullable();
+            $table->timestamp('published_at')->nullable();
+             $table->enum('isFeature', ['0', '1'])->default('0');
             $table->longText('full_desc');
             $table->timestamps();
         });
